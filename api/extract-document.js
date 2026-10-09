@@ -14,6 +14,12 @@
 
 import { Buffer } from 'node:buffer';
 
+// pdf.js calls `new DOMMatrix(...)` unconditionally. Browsers have it; Vercel's
+// Node runtime does not, which throws "DOMMatrix is not defined".
+import { installDomShims } from '../lib/dom-shim.js';
+
+installDomShims();
+
 const MAX_BYTES = 15 * 1024 * 1024; // 15 MB upload cap
 
 /* pdf-parse is loaded lazily: if the serverless bundler fails to include it,
