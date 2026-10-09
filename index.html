@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>🏆 من سيربح المليون — حصة الإنجليزي</title>
+<title>🍬 من سيربح البونبون — برعاية مس رنا</title>
 <style>
 :root {
   --bg-top: #6a11cb;
@@ -40,6 +40,111 @@ body {
   40% { transform: translate(-10px, -6px); }
   60% { transform: translate(8px, -4px); }
   80% { transform: translate(-6px, 6px); }
+}
+
+/* ---------- Fun / juice ---------- */
+/* Background slowly cycles through bright candy colors. */
+@keyframes bgShift {
+  0%   { background: linear-gradient(135deg, #ff6ec7, #6a11cb, #2575fc); }
+  25%  { background: linear-gradient(135deg, #2575fc, #00c6ff, #ff6ec7); }
+  50%  { background: linear-gradient(135deg, #00c6ff, #4caf50, #ffd166); }
+  75%  { background: linear-gradient(135deg, #ffd166, #ff9800, #6a11cb); }
+  100% { background: linear-gradient(135deg, #ff6ec7, #6a11cb, #2575fc); }
+}
+body.party { animation: bgShift 8s linear infinite; }
+body.flash-ok { animation: flashGreen 0.7s ease; }
+body.flash-bad { animation: flashRed 0.7s ease; }
+@keyframes flashGreen { 0%,100% { filter: none; } 30% { filter: brightness(1.5) hue-rotate(20deg); } }
+@keyframes flashRed { 0%,100% { filter: none; } 30% { filter: brightness(1.2) hue-rotate(-30deg) saturate(1.6); } }
+
+/* Floating candy decorations in the background. */
+@keyframes floatUp {
+  0%   { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(-15vh) rotate(720deg); opacity: 0; }
+}
+.deco {
+  position: fixed; z-index: 5; pointer-events: none; user-select: none;
+  font-size: 40px; bottom: -60px;
+  animation: floatUp linear infinite;
+}
+
+/* Sparkle burst on a correct answer. */
+@keyframes sparkle {
+  0% { transform: scale(0) rotate(0deg); opacity: 1; }
+  100% { transform: scale(1.6) rotate(140deg); opacity: 0; }
+}
+.spark {
+  position: fixed; z-index: 90; pointer-events: none;
+  font-size: 34px; animation: sparkle 0.8s ease-out forwards;
+}
+
+/* Mascot reactions. */
+@keyframes bounceIn {
+  0% { transform: scale(0) translateY(40px); }
+  60% { transform: scale(1.25) translateY(-8px); }
+  100% { transform: scale(1) translateY(0); }
+}
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-6deg) scale(1.1); }
+  50% { transform: rotate(6deg) scale(1.2); }
+}
+@keyframes sadShake {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(-10deg) scale(0.9); }
+  75% { transform: rotate(10deg) scale(0.9); }
+}
+#mascot {
+  position: fixed; left: 22px; bottom: 18px; z-index: 40;
+  font-size: 74px; cursor: pointer; transition: transform .2s;
+  filter: drop-shadow(0 8px 14px rgba(0,0,0,0.35));
+  animation: bounceIn .6s ease;
+}
+#mascot:hover { transform: scale(1.15) rotate(-4deg); }
+#mascot.happy { animation: wiggle .5s ease 3; }
+#mascot.sad { animation: sadShake .5s ease 2; }
+
+/* Sticker reward for a correct answer. */
+@keyframes stickerPop {
+  0% { transform: scale(0) rotate(-30deg); opacity: 0; }
+  50% { transform: scale(1.3) rotate(8deg); opacity: 1; }
+  80% { transform: scale(0.95) rotate(-4deg); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+#sticker {
+  position: fixed; top: 26%; right: 8%; z-index: 95;
+  font-size: 96px; pointer-events: none; display: none;
+  filter: drop-shadow(0 10px 18px rgba(0,0,0,0.4));
+}
+#sticker.on { display: block; animation: stickerPop .7s ease; }
+
+/* Streak banner. */
+#streak {
+  position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
+  z-index: 45; background: linear-gradient(135deg, #ff4d6d, #ff9800);
+  color: #fff; font-size: 22px; font-weight: bold; padding: 8px 26px;
+  border-radius: 999px; box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+  display: none; pointer-events: none;
+}
+#streak.on { display: block; animation: bounceIn .5s ease; }
+
+/* Big level-up overlay. */
+#levelup {
+  position: fixed; inset: 0; z-index: 85; display: none;
+  align-items: center; justify-content: center; pointer-events: none;
+}
+#levelup.on { display: flex; }
+#levelup .word {
+  font-size: 92px; font-weight: 900; color: #fff;
+  text-shadow: 0 0 24px var(--gold), 0 8px 0 var(--gold-dark);
+  animation: levelupAnim 1.1s ease forwards;
+}
+@keyframes levelupAnim {
+  0% { transform: scale(0.3) rotate(-12deg); opacity: 0; }
+  40% { transform: scale(1.2) rotate(4deg); opacity: 1; }
+  70% { transform: scale(1) rotate(0deg); opacity: 1; }
+  100% { transform: scale(1.6) rotate(0deg); opacity: 0; }
 }
 
 /* ---------- Setup screen ---------- */
@@ -230,8 +335,8 @@ body {
 <div id="app">
   <!-- ===== SETUP SCREEN ===== -->
   <div class="setup-card" id="setup">
-    <h1>🏆 من سيربح المليون</h1>
-    <p class="sub">حصة اللغة الإنجليزية — اختر الدرس وابدأ المسابقة</p>
+    <h1>🍬 من سيربح البونبون</h1>
+    <p class="sub">حصة اللغة الإنجليزية — برعاية مس رنا 🎀</p>
 
     <label for="gradeSel">الصف الدراسي</label>
     <select id="gradeSel"><option value="">— اختر الصف —</option></select>
@@ -307,6 +412,14 @@ body {
 </div>
 
 <canvas id="confetti"></canvas>
+
+<!-- Mascot, sticker rewards, streak banner, level-up burst -->
+<div id="mascot" title="اضغطني!">🦊</div>
+<div id="sticker"></div>
+<div id="streak"></div>
+<div id="levelup"><div class="word" id="levelupWord"></div></div>
+<div id="decoZone"></div>
+
 <div class="net-badge" id="netBadge">📡 أوضاع عدم الاتصال — التغييرات ستتزامن لاحقًا</div>
 <div class="help-hint">A B C D إجابة • 1 حذف • 2 تصويت • S نطق • Enter التالي</div>
 
@@ -326,6 +439,113 @@ let mode = 'solo';
 let timerInterval = null;
 let timeLeft = 0;
 let lastAnswerCorrect = false;
+let streak = 0;
+
+/* ---------------- Fun: mascot, stickers, juice ---------------- */
+const MASCOT_OK = ['🦊', '😸', '🦄', '🐼', '🐯', '🐸'];
+const STICKERS = ['⭐', '🌟', '✨', '🎉', '🏆', '🏅', '🥳', '💫'];
+const CANDY = ['🍬', '🍭', '🧁', '🍪', '🍩', '🎈', '🧨', '🎊', '✨', '🌈'];
+const SPARKS = ['✨', '⭐', '💫', '🌟'];
+
+const mascot = $('mascot');
+const sticker = $('sticker');
+const streakEl = $('streak');
+
+mascot.addEventListener('click', () => {
+  mascot.classList.remove('happy');
+  void mascot.offsetWidth;
+  mascot.classList.add('happy');
+  playTone(true);
+});
+
+/** Sprinkle floating candy across the screen for a few seconds. */
+function rainCandy(count = 26, duration = 4000) {
+  const zone = $('decoZone');
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('span');
+    el.className = 'deco';
+    el.textContent = CANDY[Math.floor(Math.random() * CANDY.length)];
+    el.style.left = (Math.random() * 100).toFixed(2) + 'vw';
+    el.style.animationDuration = (2 + Math.random() * 2.5).toFixed(2) + 's';
+    el.style.fontSize = (22 + Math.random() * 34).toFixed(0) + 'px';
+    zone.appendChild(el);
+    setTimeout(() => el.remove(), duration + 1500);
+  }
+}
+
+/** Short sparkle burst around a point (e.g. the clicked option). */
+function sparkleAt(x, y, count = 8) {
+  const zone = $('decoZone');
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('span');
+    el.className = 'spark';
+    el.textContent = SPARKS[Math.floor(Math.random() * SPARKS.length)];
+    el.style.left = (x + (Math.random() - 0.5) * 160) + 'px';
+    el.style.top = (y + (Math.random() - 0.5) * 120) + 'px';
+    zone.appendChild(el);
+    setTimeout(() => el.remove(), 900);
+  }
+}
+
+/** Pop a reward sticker for a correct answer. */
+function showSticker() {
+  sticker.textContent = STICKERS[Math.floor(Math.random() * STICKERS.length)];
+  sticker.classList.remove('on');
+  void sticker.offsetWidth;
+  sticker.classList.add('on');
+  clearTimeout(showSticker._t);
+  showSticker._t = setTimeout(() => sticker.classList.remove('on'), 1800);
+}
+
+/** Flash the whole screen briefly (correct = green, wrong = red). */
+function flashScreen(ok) {
+  document.body.classList.remove('flash-ok', 'flash-bad');
+  void document.body.offsetWidth;
+  document.body.classList.add(ok ? 'flash-ok' : 'flash-bad');
+  setTimeout(() => document.body.classList.remove('flash-ok', 'flash-bad'), 750);
+}
+
+/** Big celebratory word across the screen at milestones. */
+function levelupBurst(word) {
+  const lu = $('levelup');
+  $('levelupWord').textContent = word;
+  lu.classList.remove('on');
+  void lu.offsetWidth;
+  lu.classList.add('on');
+  rainCandy(34, 5000);
+  playLevelup();
+  setTimeout(() => lu.classList.remove('on'), 1200);
+}
+
+/** Update the streak banner; returns the new streak count. */
+function bumpStreak(correct) {
+  if (correct) streak += 1;
+  else streak = 0;
+  if (streak >= 2) {
+    streakEl.textContent = '🔥 سلسلة ' + streak + ' إجابات صحيحة!';
+    streakEl.classList.remove('on');
+    void streakEl.offsetWidth;
+    streakEl.classList.add('on');
+    clearTimeout(bumpStreak._t);
+    bumpStreak._t = setTimeout(() => streakEl.classList.remove('on'), 2600);
+  } else {
+    streakEl.classList.remove('on');
+  }
+  return streak;
+}
+
+/** Mascot reacts to the answer. */
+function mascotReact(ok) {
+  mascot.classList.remove('happy', 'sad');
+  void mascot.offsetWidth;
+  if (ok) {
+    mascot.textContent = MASCOT_OK[Math.floor(Math.random() * MASCOT_OK.length)];
+    mascot.classList.add('happy');
+  } else {
+    mascot.textContent = '🥺';
+    mascot.classList.add('sad');
+  }
+}
 
 /* ---------------- Setup screen ---------------- */
 const gradeSel = $('gradeSel'), unitSel = $('unitSel'), startBtn = $('startBtn');
@@ -379,6 +599,9 @@ function startGame() {
   $('setup').style.display = 'none';
   $('endScreen').style.display = 'none';
   $('game').classList.add('on');
+  streak = 0;
+  document.body.classList.add('party');
+  rainCandy(30, 6000);
   renderAll();
 }
 
@@ -473,6 +696,9 @@ function onTimeUp() {
   const correctBtn = [...btns].find((b) => b.dataset.letter === q.correct_option);
   if (correctBtn) correctBtn.classList.add('correct');
   playTone(false);
+  bumpStreak(false);
+  mascotReact(false);
+  flashScreen(false);
   document.body.classList.add('shake');
   setTimeout(() => document.body.classList.remove('shake'), 600);
   setTimeout(() => showExplanation(q, false, true), 700);
@@ -491,14 +717,32 @@ function onAnswer(letter) {
   const pickedBtn = [...btns].find((b) => b.dataset.letter === letter);
   if (pickedBtn) pickedBtn.classList.add('locked');
 
+  // Celebrate at the clicked spot right away.
+  if (pickedBtn) {
+    const r = pickedBtn.getBoundingClientRect ? pickedBtn.getBoundingClientRect() : null;
+    if (r) sparkleAt(r.left + r.width / 2, r.top + r.height / 2, 10);
+  }
+
   setTimeout(() => {
+    const level = game.level + 1;
     if (res.correct) {
       if (correctBtn) correctBtn.classList.add('correct');
       playTone(true);
+      bumpStreak(true);
+      mascotReact(true);
+      flashScreen(true);
+      showSticker();
+      rainCandy(18, 3000);
+      // Milestone cheers at the safe havens and every 5 levels.
+      if (level === 5 || level === 10) levelupBurst('🎉 مرحلة مضمونة! 🎉');
+      else if (level % 5 === 0) levelupBurst('⭐ رائع! ⭐');
     } else {
       if (pickedBtn) pickedBtn.classList.add('wrong');
       if (correctBtn) correctBtn.classList.add('correct');
       playTone(false);
+      bumpStreak(false);
+      mascotReact(false);
+      flashScreen(false);
       document.body.classList.add('shake');
       setTimeout(() => document.body.classList.remove('shake'), 600);
       recordError(q.id, q.grade, q.unit, letter);
@@ -578,11 +822,16 @@ function showEnd() {
   }
   confettiBurst();
   playWin();
+  rainCandy(60, 7000);
+  levelupBurst(result.winner ? '🏆 فزنا! 🏆' : '🥳 أحسنت! 🥳');
+  mascotReact(true);
 }
 
 $('againBtn').onclick = () => {
   $('endScreen').style.display = 'none';
   $('setup').style.display = 'block';
+  document.body.classList.remove('party');
+  streak = 0;
   game = null;
   populateGrades();
   checkReady();
@@ -627,13 +876,27 @@ function tone(freq, duration, type = 'sine', when = 0) {
   } catch { /* audio not available */ }
 }
 function playTone(correct) {
-  if (correct) { tone(523, 0.15); tone(659, 0.15, 'sine', 0.12); tone(784, 0.3, 'sine', 0.24); }
-  else { tone(200, 0.2, 'sawtooth'); tone(150, 0.4, 'sawtooth', 0.15); }
+  if (correct) {
+    // Bright rising arpeggio: C-E-G-C
+    tone(523, 0.15); tone(659, 0.15, 'sine', 0.12); tone(784, 0.3, 'sine', 0.24);
+    tone(1047, 0.35, 'triangle', 0.36);
+  } else {
+    // Funny descending "wah wah" buzz.
+    tone(200, 0.2, 'sawtooth'); tone(150, 0.4, 'sawtooth', 0.15);
+    tone(110, 0.5, 'sawtooth', 0.35);
+  }
 }
-function playClick() { tone(660, 0.06); }
+function playClick() { tone(660, 0.06); tone(880, 0.05, 'triangle', 0.04); }
 function playWin() {
-  const notes = [523, 659, 784, 1047];
-  notes.forEach((f, i) => tone(f, 0.2, 'triangle', i * 0.12));
+  const notes = [523, 659, 784, 1047, 880, 1047, 1319];
+  notes.forEach((f, i) => tone(f, 0.22, 'triangle', i * 0.11));
+}
+function playLevelup() {
+  // Fanfare: two pickup notes then a bright chord.
+  tone(392, 0.12, 'triangle', 0);
+  tone(523, 0.12, 'triangle', 0.14);
+  tone(659, 0.3, 'triangle', 0.28);
+  tone(784, 0.4, 'triangle', 0.30);
 }
 
 /* ---------------- Confetti ---------------- */
