@@ -12,13 +12,70 @@
  * Supported: PDF, DOCX, DOC, RTF, TXT/MD/CSV, and any text file.
  */
 
-import { PDFParse } from 'pdf-parse';
+import { Buffer } from 'node:buffer';
 
 const MAX_BYTES = 15 * 1024 * 1024; // 15 MB upload cap
 
-/** Pull the raw uploaded file out of a Vercel multipart request. */
-function readMultipartFile(req) {
-  return new Promise((resolve, reject) => {
+/* pdf-parse is loaded lazily: if the serverless bundler fails to include it,
+ * the API still loads and returns a readable error instead of a module crash. */
+let _PDFParse = null;
+async function getPdfParser() {
+  if (_PDFParse) return _PDFParse;
+  let mod;
+  try {
+    mod = await import('pdf-parse');
+  } catch (e) {
+    const err = new Error('تعذّر تحميل محرك قراءة PDF على الخادم');
+    err.__cause = e.message;
+    err.__stage = 'import(pdf-parse)';
+    throw err;
+  }
+  const Ctor = mod.PDFParse || mod.default?.PDFParse || mod.default;
+  if (typeof Ctor !== 'function') {
+    const err = new Error('محرك PDF غير متوفر (تصدير غير معروف)');
+    err.__stage = 'import(pdf-parse)';
+    throw err;
+  }
+  _PDFParse = Ctor;
+  return Ctor;
+}
+
+/**
+ * Extract the uploaded file from the request body.
+ *
+ * Vercel parses multipart/form-data automatically (req.body is an object,
+ * req.body.file.data is the Buffer). Other runtimes (local node) leave a raw
+ * multipart stream, so we fall back to parsing that ourselves.
+ */
+async function readFileUpload(req) {
+  // 1) Vercel has already parsed the body into an object.
+  const body = req.body;
+  if (body && typeof body === 'object' && !Buffer.isBuffer(body)) {
+    const f = body.file;
+    if (f) {
+      const buf = Buffer.isBuffer(f) ? f : Buffer.from(f.data || f);
+      if (buf.length) return { buf, name: f.name || 'upload' };
+    }
+    if (body.base64) return { buf: Buffer.from(body.base64, 'base64'), name: body.name || 'upload.txt' };
+  }
+
+  // 2) Raw multipart stream (local node / other runtimes).
+  const contentType = String(req.headers['content-type'] || '');
+  if (!contentType.startsWith('multipart/form-data')) {
+    const err = new Error('upload a file or send base64');
+    err.__stage = 'body';
+    throw err;
+  }
+
+  const boundary = (contentType.match(/boundary=(?:"([^"]+)"|([^;]+))/) || [])[1]
+    || (contentType.match(/boundary=(?:"([^"]+)"|([^;]+))/) || [])[2];
+  if (!boundary) {
+    const err = new Error('missing multipart boundary');
+    err.__stage = 'boundary';
+    throw err;
+  }
+
+  const raw = await new Promise((resolve, reject) => {
     const chunks = [];
     let total = 0;
     req.on('data', (c) => {
@@ -29,6 +86,16 @@ function readMultipartFile(req) {
     req.on('error', reject);
     req.on('end', () => resolve(Buffer.concat(chunks)));
   });
+
+  const section = splitMultipart(raw, boundary)
+    .map(parseSection)
+    .find((s) => s && s.fieldName === 'file' && s.fileName);
+  if (!section) {
+    const err = new Error('no "file" field in upload');
+    err.__stage = 'multipart';
+    throw err;
+  }
+  return { buf: section.body, name: section.fileName };
 }
 
 /** Naive multipart/form-data split — avoids a body-parser dependency. */
@@ -65,6 +132,7 @@ function parseSection(buf) {
 async function extractPdf(buf) {
   // pdf.js requires Uint8Array, not a Node Buffer.
   const data = new Uint8Array(buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength));
+  const PDFParse = await getPdfParser();
   const parser = new PDFParse(data);
   const out = await parser.getText();
   const text = typeof out === 'string' ? out : (out?.text || '');
@@ -122,28 +190,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    let buf, name;
-    const contentType = String(req.headers['content-type'] || '');
-
-    if (contentType.startsWith('multipart/form-data')) {
-      const boundary = (contentType.match(/boundary=(?:"([^"]+)"|([^;]+))/) || [])[1]
-        || (contentType.match(/boundary=(?:"([^"]+)"|([^;]+))/) || [])[2];
-      if (!boundary) return res.status(400).json({ error: 'missing multipart boundary' });
-      const raw = await readMultipartFile(req);
-      const section = splitMultipart(raw, boundary)
-        .map(parseSection)
-        .find((s) => s && s.fieldName === 'file' && s.fileName);
-      if (!section) return res.status(400).json({ error: 'no "file" field in upload' });
-      buf = section.body;
-      name = section.fileName;
-    } else {
-      // JSON fallback for tests: { base64, name }
-      const body = req.body || {};
-      const b64 = body.base64;
-      if (!b64) return res.status(400).json({ error: 'upload a file or send base64' });
-      buf = Buffer.from(b64, 'base64');
-      name = body.name || 'upload.txt';
-    }
+    let { buf, name } = await readFileUpload(req);
 
     if (!buf || !buf.length) {
       return res.status(400).json({ error: 'الملف فارغ' });
@@ -177,7 +224,10 @@ export default async function handler(req, res) {
       chars: text.length,
     });
   } catch (err) {
-    console.error('[extract-document] error:', err.message);
-    return res.status(500).json({ error: err.message || 'فشلت قراءة الملف' });
+    const detail = err.__stage ? ` (${err.__stage}: ${err.__cause || err.message})` : '';
+    console.error('[extract-document] error:', err.__stage || 'runtime', err.message);
+    return res.status(500).json({
+      error: (err.message || 'فشلت قراءة الملف') + detail,
+    });
   }
 }
