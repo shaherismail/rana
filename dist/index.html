@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>🏆 من سيربح المليون — حصة الإنجليزي</title>
+<style>:root{--bg-top:#6a11cb;--bg-bot:#2575fc;--gold:gold;--gold-dark:#f6a609;--blue-team:#2196f3;--red-team:#f44336;--good:#4caf50;--bad:#f44336;--panel:#fff;--ink:#22223b}*{box-sizing:border-box;margin:0;padding:0}html,body{height:100%}body{background:linear-gradient(135deg, var(--bg-top), var(--bg-bot));color:var(--ink);-webkit-user-select:none;user-select:none;font-family:Comic Sans MS,Tahoma,Segoe UI,sans-serif;overflow:hidden}#app{justify-content:center;align-items:center;display:flex;position:fixed;inset:0}@keyframes pop{0%{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}@keyframes pulse{0%,to{box-shadow:0 15px 40px #0006}50%{box-shadow:0 0 0 12px var(--gold), 0 0 60px var(--gold)}}@keyframes correctFlash{0%,to{filter:brightness()}50%{filter:brightness(1.6)}}@keyframes tick{50%{transform:scale(1.12)}}@keyframes shake{0%,to{transform:translate(0)}20%{transform:translate(12px,-8px)}40%{transform:translate(-10px,-6px)}60%{transform:translate(8px,-4px)}80%{transform:translate(-6px,6px)}}.setup-card{background:var(--panel);text-align:center;border-radius:28px;width:92%;max-width:640px;padding:40px 48px;animation:.4s pop;box-shadow:0 20px 60px #0006}.setup-card h1{color:var(--bg-top);margin-bottom:6px;font-size:34px}.setup-card p.sub{color:#666;margin-bottom:24px;font-size:17px}.setup-card label{text-align:right;margin:14px 0 6px;font-size:15px;font-weight:700;display:block}.setup-card select{cursor:pointer;background:#fff;border:3px solid #ddd;border-radius:14px;width:100%;padding:14px 16px;font-family:inherit;font-size:18px}.setup-card select:focus{border-color:var(--bg-bot);outline:none}.mode-row{gap:16px;margin-top:20px;display:flex}.mode-btn{cursor:pointer;background:#fff;border:3px solid #ddd;border-radius:18px;flex:1;padding:18px 12px;font-family:inherit;font-size:18px;font-weight:700;transition:all .15s}.mode-btn.active{border-color:var(--bg-bot);background:#e3f0ff;transform:scale(1.03)}.timer-row{justify-content:center;align-items:center;gap:12px;margin-top:18px;font-size:16px;display:flex}.timer-row input[type=number]{border:2px solid #ddd;border-radius:10px;width:80px;padding:8px;font-size:16px}.start-btn{background:linear-gradient(135deg, var(--gold), var(--gold-dark));color:#4a3200;cursor:pointer;border:none;border-radius:18px;width:100%;margin-top:26px;padding:18px;font-family:inherit;font-size:24px;font-weight:700;transition:all .1s;box-shadow:0 8px #c98a00}.start-btn:active{transform:translateY(4px);box-shadow:0 4px #c98a00}.start-btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}#game{flex-direction:column;width:100%;height:100%;display:none}#game.on{display:flex}.topbar{color:#fff;background:#00000040;justify-content:space-between;align-items:center;padding:10px 24px;font-size:18px;font-weight:700;display:flex}.topbar .score-chip{background:var(--gold);color:#4a3200;border-radius:999px;padding:6px 18px;font-size:20px;box-shadow:0 4px 10px #0000004d}.teams-bar{gap:16px;display:flex}.team-chip{opacity:.55;border-radius:999px;padding:6px 16px;font-size:17px;transition:all .2s}.team-chip.active{opacity:1;transform:scale(1.1);box-shadow:0 0 0 3px #fff}.team-chip.blue{background:var(--blue-team)}.team-chip.red{background:var(--red-team)}.main-area{flex:1;justify-content:center;align-items:center;gap:40px;padding:20px 40px;display:flex}.ladder{background:#00000059;border-radius:20px;flex-direction:column;gap:4px;min-width:190px;padding:14px 10px;display:flex}.ladder .step{color:#fff;border-radius:10px;justify-content:space-between;align-items:center;padding:5px 12px;font-size:15px;transition:all .3s;display:flex}.ladder .step.done{color:#b9f6ca}.ladder .step.current{background:linear-gradient(90deg, var(--gold), var(--gold-dark));color:#4a3200;font-weight:700;transform:scale(1.05)}.ladder .step.safe{border:2px solid #ffffff40}.ladder .step .num{opacity:.7;font-size:12px}.question-area{flex-direction:column;flex:1;align-items:center;gap:18px;max-width:900px;display:flex}.q-image{border-radius:18px;max-width:100%;max-height:220px;display:none;box-shadow:0 10px 30px #0006}.q-image.on{display:block}.speaker-btn{cursor:pointer;background:#fff;border:none;border-radius:50%;width:56px;height:56px;font-size:26px;transition:transform .15s;box-shadow:0 6px 16px #00000059}.speaker-btn:hover{transform:scale(1.1)}.question-card{background:var(--panel);text-align:center;border-radius:22px;width:100%;padding:26px 34px;font-size:28px;font-weight:700;line-height:1.5;box-shadow:0 15px 40px #0006}.question-card.pulsing{animation:.5s 3 pulse}.options{grid-template-columns:1fr 1fr;gap:16px;width:100%;display:grid}.option-btn{background:var(--panel);cursor:pointer;text-align:right;color:var(--ink);border:3px solid #e0e0e0;border-radius:18px;align-items:center;gap:14px;padding:20px 18px;font-family:inherit;font-size:22px;font-weight:700;transition:all .15s;display:flex}.option-btn .letter{background:var(--bg-top);color:#fff;border-radius:12px;flex-shrink:0;justify-content:center;align-items:center;min-width:44px;height:44px;font-size:22px;display:flex}.option-btn:hover:not(:disabled){border-color:var(--bg-bot);transform:translateY(-3px);box-shadow:0 8px 18px #0000004d}.option-btn:disabled{cursor:default}.option-btn.eliminated{opacity:.25;pointer-events:none;text-decoration:line-through}.option-btn.locked{border-color:var(--gold);background:#fff3cd}.option-btn.correct{background:var(--good);color:#fff;border-color:var(--good);animation:.6s 2 correctFlash}.option-btn.wrong{background:var(--bad);color:#fff;border-color:var(--bad)}.lifelines{gap:16px;display:flex}.life-btn{cursor:pointer;background:#fffffff2;border:none;border-radius:16px;padding:12px 22px;font-family:inherit;font-size:18px;font-weight:700;transition:all .15s;box-shadow:0 6px 14px #0000004d}.life-btn:hover:not(:disabled){transform:translateY(-3px)scale(1.04)}.life-btn.used{opacity:.35;pointer-events:none}.timer-ring{color:#fff;border:4px solid var(--good);background:#00000059;border-radius:50%;justify-content:center;align-items:center;width:72px;height:72px;font-size:24px;font-weight:700;display:none}.timer-ring.on{display:flex}.timer-ring.low{border-color:var(--bad);animation:1s infinite tick}.overlay{z-index:50;background:#0000008c;justify-content:center;align-items:center;display:none;position:fixed;inset:0}.overlay.on{display:flex}.overlay .card{text-align:center;background:#fff;border-radius:24px;width:90%;max-width:640px;padding:34px 40px;animation:.35s pop;box-shadow:0 30px 80px #00000080}.explain-card .verdict{margin-bottom:10px;font-size:30px}.explain-card .verdict.ok{color:var(--good)}.explain-card .verdict.no{color:var(--bad)}.explain-card h2{margin-bottom:12px;font-size:26px}.explain-card p{color:#444;font-size:20px;line-height:1.6}.explain-card button{background:var(--bg-top);color:#fff;cursor:pointer;border:none;border-radius:16px;margin-top:22px;padding:14px 40px;font-family:inherit;font-size:22px;font-weight:700}.poll-card h2{margin-bottom:20px;font-size:26px}.poll-row{align-items:center;gap:12px;margin-bottom:14px;display:flex}.poll-row .lab{width:40px;font-size:22px;font-weight:700}.poll-row input{border:2px solid #ddd;border-radius:10px;width:70px;padding:8px;font-size:18px}.poll-bar-track{background:#eee;border-radius:999px;flex:1;height:26px;overflow:hidden}.poll-bar{background:var(--bg-bot);border-radius:999px;width:0%;height:100%;transition:width .6s}.poll-card .ok-btn{background:var(--good);color:#fff;cursor:pointer;border:none;border-radius:16px;margin:22px auto 0;padding:14px 40px;font-family:inherit;font-size:22px;font-weight:700}#confetti{pointer-events:none;z-index:100;position:fixed;inset:0}.shake{animation:.5s shake}.end-card{background:var(--panel);text-align:center;z-index:20;border-radius:28px;padding:44px 56px;animation:.4s pop;box-shadow:0 20px 60px #00000080}.end-card h1{margin-bottom:12px;font-size:40px}.end-card .big{color:var(--gold-dark);margin:10px 0;font-size:60px}.end-card .again-btn{background:linear-gradient(135deg, var(--gold), var(--gold-dark));color:#4a3200;cursor:pointer;border:none;border-radius:18px;margin-top:24px;padding:16px 48px;font-family:inherit;font-size:24px;font-weight:700;box-shadow:0 8px #c98a00}.net-badge{z-index:30;color:#fff;background:#0000008c;border-radius:999px;padding:6px 14px;font-size:13px;display:none;position:fixed;bottom:12px;left:12px}.net-badge.on{display:block}.help-hint{z-index:30;color:#fff;direction:ltr;background:#00000073;border-radius:999px;padding:6px 14px;font-size:12px;position:fixed;bottom:12px;right:12px}</style>
+  <script type="module" crossorigin src="/assets/main-C16y7MBJ.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/questions-Bof_JiQt.js">
+</head>
+<body>
+<div id="app">
+  <!-- ===== SETUP SCREEN ===== -->
+  <div class="setup-card" id="setup">
+    <h1>🏆 من سيربح المليون</h1>
+    <p class="sub">حصة اللغة الإنجليزية — اختر الدرس وابدأ المسابقة</p>
+
+    <label for="gradeSel">الصف الدراسي</label>
+    <select id="gradeSel"><option value="">— اختر الصف —</option></select>
+
+    <label for="unitSel">الدرس / الوحدة</label>
+    <select id="unitSel" disabled><option value="">— اختر الدرس —</option></select>
+
+    <label>نمط اللعب</label>
+    <div class="mode-row">
+      <button class="mode-btn active" id="soloMode">👦 فردي</button>
+      <button class="mode-btn" id="teamsMode">🔵🔴 فرق</button>
+    </div>
+
+    <div class="timer-row">
+      <label><input type="checkbox" id="timerCheck" /> مؤقت تنازلي</label>
+      <input type="number" id="timerSecs" value="30" min="5" max="120" />
+      <span>ثانية</span>
+    </div>
+    <button class="start-btn" id="startBtn" disabled>▶ ابدأ المسابقة</button>
+    <p id="setupMsg" style="margin-top:14px;color:#c00;font-weight:bold;"></p>
+  </div>
+
+  <!-- ===== GAME SCREEN ===== -->
+  <div id="game">
+    <div class="topbar">
+      <div class="teams-bar" id="teamsBar"></div>
+      <div class="score-chip" id="scoreChip">0</div>
+      <button class="life-btn" id="quitBtn">إنهاء</button>
+    </div>
+
+    <div class="main-area">
+      <div class="ladder" id="ladder"></div>
+      <div class="question-area">
+        <img class="q-image" id="qImage" alt="صورة السؤال" />
+        <button class="speaker-btn" id="speakBtn" title="نطق السؤال (S)">🔊</button>
+        <div class="question-card" id="questionCard"></div>
+        <div class="options" id="options"></div>
+        <div class="lifelines">
+          <button class="life-btn" id="fiftyBtn">✂️ حذف إجابتين (1)</button>
+          <button class="life-btn" id="pollBtn">🙋 تصويت الفصل (2)</button>
+        </div>
+        <div class="timer-ring" id="timerRing">30</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== END SCREEN ===== -->
+  <div class="end-card" id="endScreen" style="display:none;">
+    <h1 id="endTitle">🎉</h1>
+    <div class="big" id="endBig"></div>
+    <p id="endSub"></p>
+    <button class="again-btn" id="againBtn">🔄 العب مرة أخرى</button>
+  </div>
+</div>
+
+<!-- Explanation overlay -->
+<div class="overlay" id="explainOverlay">
+  <div class="card explain-card">
+    <div class="verdict" id="explainVerdict"></div>
+    <h2 id="explainTitle">الشرح</h2>
+    <p id="explainText"></p>
+    <button id="explainNext">التالي ←</button>
+  </div>
+</div>
+
+<!-- Audience poll overlay -->
+<div class="overlay" id="pollOverlay">
+  <div class="card poll-card">
+    <h2>🙋 تصويت الفصل — ارفعوا أيديكم!</h2>
+    <div id="pollRows"></div>
+    <button class="ok-btn" id="pollOk">اعرض النتيجة</button>
+  </div>
+</div>
+
+<canvas id="confetti"></canvas>
+<div class="net-badge" id="netBadge">📡 أوضاع عدم الاتصال — التغييرات ستتزامن لاحقًا</div>
+<div class="help-hint">A B C D إجابة • 1 حذف • 2 تصويت • S نطق • Enter التالي</div>
+
+</body>
+</html>

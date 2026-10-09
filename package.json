@@ -1,0 +1,17 @@
+{
+  "name": "millionaire-classroom",
+  "version": "1.0.0",
+  "description": "Interactive EdTech gamification platform for English classes (Who Wants to be a Millionaire style) for smartboards",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "pdf-parse": "^2.4.5"
+  },
+  "devDependencies": {
+    "vercel": "^37.0.0"
+  }
+}

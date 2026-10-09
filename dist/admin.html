@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>لوحة تحكم المعلم — من سيربح المليون</title>
+<style>:root{--primary:#2575fc;--primary-dark:#6a11cb;--gold:#f6a609;--good:#4caf50;--bad:#f44336;--panel:#fff;--ink:#22223b;--muted:#6b7280}*{box-sizing:border-box;margin:0;padding:0}body{color:var(--ink);background:#f3f4f6;font-family:Tahoma,Segoe UI,sans-serif}button,select,input{font-family:inherit}#loginGate{background:linear-gradient(135deg, var(--primary-dark), var(--primary));justify-content:center;align-items:center;display:flex;position:fixed;inset:0}.login-card{text-align:center;background:#fff;border-radius:24px;width:380px;padding:40px 44px;box-shadow:0 25px 70px #0006}.login-card h1{margin-bottom:6px;font-size:24px}.login-card p{color:var(--muted);margin-bottom:20px;font-size:14px}.login-card input{text-align:center;border:3px solid #e5e7eb;border-radius:14px;width:100%;margin-bottom:12px;padding:14px;font-size:18px}.login-card button{background:linear-gradient(135deg, var(--primary-dark), var(--primary));color:#fff;cursor:pointer;border:none;border-radius:14px;width:100%;padding:14px;font-size:18px;font-weight:700}.login-card .err{color:var(--bad);margin-top:10px;font-weight:700}#admin{max-width:1200px;margin:0 auto;padding:20px 28px 60px;display:none}#admin.on{display:block}header{flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-bottom:24px;display:flex}header h1{font-size:26px}header .meta{color:var(--muted);font-size:14px}.sync-chip{color:var(--good);background:#e8f5e9;border:1px solid #a5d6a7;border-radius:999px;padding:6px 16px;font-size:13px;font-weight:700}.sync-chip.offline{color:#e65100;background:#fff3e0;border-color:#ffcc80}.tabs{flex-wrap:wrap;gap:8px;margin-bottom:20px;display:flex}.tab{cursor:pointer;background:#fff;border:2px solid #e5e7eb;border-radius:999px;padding:10px 22px;font-size:15px;font-weight:700;transition:all .15s}.tab.active{border-color:var(--primary);color:var(--primary-dark);background:#e3f0ff}.tab .badge{background:var(--primary);color:#fff;border-radius:999px;margin-right:6px;padding:0 8px;font-size:12px;display:inline-block}.panel{background:var(--panel);border-radius:20px;padding:26px 30px;display:none;box-shadow:0 6px 24px #00000012}.panel.on{display:block}.panel h2{margin-bottom:16px}.grid2{grid-template-columns:1fr 1fr;gap:14px;display:grid}.grid4{grid-template-columns:repeat(4,1fr);gap:14px;display:grid}label.f{color:#555;margin-bottom:5px;font-size:13px;font-weight:700;display:block}input.f,select.f,textarea.f{background:#fff;border:2px solid #e5e7eb;border-radius:12px;width:100%;margin-bottom:14px;padding:11px 14px;font-size:15px}input.f:focus,select.f:focus,textarea.f:focus{border-color:var(--primary);outline:none}textarea.f{resize:vertical;min-height:70px}.btn{cursor:pointer;border:none;border-radius:14px;padding:12px 26px;font-size:16px;font-weight:700;transition:all .12s}.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-dark)}.btn-gold{background:linear-gradient(135deg, gold, var(--gold));color:#4a3200}.btn-good{background:var(--good);color:#fff}.btn-danger{background:var(--bad);color:#fff}.btn-ghost{color:#555;background:#fff;border:2px solid #e5e7eb}.btn:disabled{opacity:.5;cursor:not-allowed}.btn-row{flex-wrap:wrap;gap:12px;margin-top:6px;display:flex}.ai-box{background:linear-gradient(135deg,#ede7f6,#e3f2fd);border-radius:16px;margin-bottom:20px;padding:20px}.ai-box h3{margin-bottom:10px;font-size:17px}.ai-status{color:#555;margin-top:8px;font-size:14px}table{border-collapse:collapse;width:100%;font-size:14px}th,td{text-align:right;border-bottom:1px solid #e5e7eb;padding:9px 10px}th{color:#555;background:#f9fafb;font-size:13px}tr:hover td{background:#f3f4f6}.edit-input{border:1px solid #d1d5db;border-radius:8px;width:100%;padding:5px 8px;font-size:13px}.q-diff{text-align:center;font-weight:700}.filters{flex-wrap:wrap;align-items:flex-end;gap:12px;margin-bottom:16px;display:flex}.filters>div{flex:1;min-width:160px}.filters input,.filters select{border:2px solid #e5e7eb;border-radius:10px;width:100%;padding:9px 12px;font-size:14px}.filters label.f{margin-bottom:3px}.empty{text-align:center;color:var(--muted);padding:30px;font-size:15px}.stat-row{align-items:center;gap:12px;margin-bottom:12px;display:flex}.stat-row .q{background:#f9fafb;border-radius:10px;flex:1;padding:8px 12px;font-size:14px}.stat-row .bar-track{background:#eee;border-radius:999px;width:200px;height:20px;overflow:hidden}.stat-row .bar{background:linear-gradient(90deg, var(--gold), var(--bad));border-radius:999px;height:100%}.stat-row .n{text-align:center;width:40px;color:var(--bad);font-weight:700}.import-note{background:#fff8e1;border:2px dashed #ffcc80;border-radius:14px;margin:14px 0;padding:16px 20px;font-size:14px;line-height:1.7}.import-ok{color:var(--good);background:#e8f5e9;border-radius:12px;margin-top:12px;padding:12px 18px;font-weight:700}.import-err{color:var(--bad);background:#ffebee;border-radius:12px;margin-top:12px;padding:12px 18px;font-weight:700}details.help{color:#555;margin-top:14px;font-size:14px}details.help summary{cursor:pointer;color:var(--primary);font-weight:700}</style>
+  <script type="module" crossorigin src="/assets/admin-B0TCVOO1.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/questions-Bof_JiQt.js">
+</head>
+<body>
+
+<!-- ===== Login gate ===== -->
+<div id="loginGate">
+  <div class="login-card">
+    <h1>🔐 لوحة تحكم المعلم</h1>
+    <p>أدخل كلمة سر لوحة التحكم للمتابعة</p>
+    <input type="password" id="adminPass" placeholder="كلمة السر" />
+    <button id="loginBtn">دخول</button>
+    <div class="err" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- ===== Admin panel ===== -->
+<div id="admin">
+  <header>
+    <div>
+      <h1>🎓 لوحة تحكم المعلم</h1>
+      <div class="meta">منصة من سيربح المليون — حصة اللغة الإنجليزية</div>
+    </div>
+    <span class="sync-chip" id="syncChip">متصل بالسحابة</span>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="add">➕ إضافة سؤال</button>
+    <button class="tab" data-tab="import">📥 استيراد Excel</button>
+    <button class="tab" data-tab="ai">🤖 توليد بالذكاء الاصطناعي</button>
+    <button class="tab" data-tab="manage">📚 إدارة الأسئلة <span class="badge" id="countBadge">0</span></button>
+    <button class="tab" data-tab="analytics">📊 تحليل الأخطاء <span class="badge" id="errorBadge">0</span></button>
+  </div>
+
+  <!-- ===== Add question ===== -->
+  <div class="panel on" id="panel-add">
+    <h2>إضافة سؤال جديد</h2>
+    <div class="grid2">
+      <div>
+        <label class="f">الصف الدراسي</label>
+        <input class="f" id="qGrade" placeholder="مثال: Grade 4" list="gradeList" />
+        <datalist id="gradeList"></datalist>
+      </div>
+      <div>
+        <label class="f">الدرس / الوحدة</label>
+        <input class="f" id="qUnit" placeholder="مثال: Unit 1: Animals" list="unitList" />
+        <datalist id="unitList"></datalist>
+      </div>
+    </div>
+    <label class="f">مستوى الصعوبة (من 1 إلى 15)</label>
+    <input class="f" id="qDifficulty" type="number" min="1" max="15" value="1" style="width:140px;" />
+    <label class="f">نص السؤال</label>
+    <textarea class="f" id="qQuestion" placeholder="مثال: Choose the correct word: The ___ is barking."></textarea>
+    <div class="grid4">
+      <div><label class="f">الخيار A</label><input class="f" id="qA" placeholder="A" /></div>
+      <div><label class="f">الخيار B</label><input class="f" id="qB" placeholder="B" /></div>
+      <div><label class="f">الخيار C</label><input class="f" id="qC" placeholder="C" /></div>
+      <div><label class="f">الخيار D</label><input class="f" id="qD" placeholder="D" /></div>
+    </div>
+    <label class="f">الإجابة الصحيحة</label>
+    <select class="f" id="qCorrect" style="width:140px;">
+      <option>A</option><option>B</option><option>C</option><option>D</option>
+    </select>
+    <label class="f">الشرح (يظهر بعد الإجابة)</label>
+    <textarea class="f" id="qExplanation" placeholder="اشرح القاعدة أو سبب صحة الإجابة بلغة بسيطة..."></textarea>
+    <div class="grid2">
+      <div>
+        <label class="f">رابط الصورة (اختياري)</label>
+        <input class="f" id="qImage" placeholder="https://..." />
+      </div>
+      <div>
+        <label class="f">النص الصوتي للنطق (اختياري)</label>
+        <input class="f" id="qAudio" placeholder="The dog is barking." />
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="saveQBtn">💾 حفظ السؤال</button>
+      <button class="btn btn-ghost" id="clearQBtn">مسح</button>
+    </div>
+    <div class="import-ok" id="addMsg" style="display:none;"></div>
+  </div>
+
+  <!-- ===== Excel import ===== -->
+  <div class="panel" id="panel-import">
+    <h2>📥 استيراد أسئلة من ملف Excel</h2>
+    <div class="import-note">
+      <b>طريقة الاستخدام:</b><br />
+      1. نزّل النموذج الجاهز بالأسفل وافتحه ببرنامج Excel.<br />
+      2. اكتب أسئلة الدرس في الصفوف (كل صف = سؤال).<br />
+      3. ارجع هنا واضغط «اختيار ملف» ثم «رفع وحفظ».
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" id="downloadTemplate">⬇️ تنزيل نموذج Excel</button>
+      <input type="file" id="excelFile" accept=".csv" style="display:none;" />
+      <button class="btn btn-primary" id="pickFileBtn">📁 اختيار ملف</button>
+      <button class="btn btn-good" id="uploadBtn" disabled>⬆️ رفع وحفظ</button>
+    </div>
+    <div id="importMsg"></div>
+    <details class="help">
+      <summary>صيغة الأعمدة المطلوبة</summary>
+      <p style="margin-top:8px; line-height:1.8;">
+        الأعمدة بالترتيب: <b>grade</b> (الصف) • <b>unit</b> (الدرس) • <b>difficulty</b> (الصعوبة 1-15) •
+        <b>question</b> (السؤال) • <b>option_a</b> • <b>option_b</b> • <b>option_c</b> • <b>option_d</b> •
+        <b>correct_option</b> (A/B/C/D) • <b>explanation</b> (الشرح) • <b>image_url</b> (اختياري) •
+        <b>audio_text</b> (اختياري)
+      </p>
+    </details>
+  </div>
+
+  <!-- ===== AI generator ===== -->
+  <div class="panel" id="panel-ai">
+    <h2>🤖 توليد الأسئلة بالذكاء الاصطناعي</h2>
+    <div class="ai-box">
+      <h3>اكتب تفاصيل الدرس وسيقوم الذكاء الاصطناعي بإنشاء أسئلة متدرجة الصعوبة للمراجعة</h3>
+      <div class="grid2">
+        <div>
+          <label class="f">الصف الدراسي</label>
+          <input class="f" id="aiGrade" placeholder="Grade 4" list="gradeList" />
+        </div>
+        <div>
+          <label class="f">الدرس / الوحدة (اتركه فارغًا إذا كنت سترفع ملفًا)</label>
+          <input class="f" id="aiUnit" placeholder="Unit 1: Animals" list="unitList" />
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-gold" id="aiGenerateBtn">✨ توليد الأسئلة</button>
+      </div>
+      <div class="ai-status" id="aiStatus"></div>
+    </div>
+
+    <div class="ai-box" style="margin-top:16px;">
+      <h3>📄 أو ارفع ملف الدرس (PDF / Word / Text) — يقرأ محتواه ويبني الأسئلة منه</h3>
+      <div class="grid2">
+        <div>
+          <label class="f">الصف الدراسي</label>
+          <input class="f" id="fileGrade" placeholder="Grade 4" list="gradeList" />
+        </div>
+        <div>
+          <label class="f">الدرس / الوحدة (يُملأ تلقائيًا من المحتوى إن تُرك فارغًا)</label>
+          <input class="f" id="fileUnit" placeholder="يُكتشف من الملف" list="unitList" />
+        </div>
+      </div>
+      <div class="btn-row">
+        <label class="btn btn-gold" style="cursor:pointer;">📎 اختيار ملف
+          <input type="file" id="docFile" accept=".pdf,.doc,.docx,.txt,.md,.rtf,.csv" style="display:none;" />
+        </label>
+        <button class="btn btn-gold" id="docGenerateBtn" disabled>🤖 ولّد أسئلة من الملف</button>
+      </div>
+      <div class="ai-status" id="docStatus"></div>
+      <div id="docInfo" style="font-size:13px; color:var(--muted); margin-top:8px;"></div>
+    </div>
+
+    <div id="aiReview"></div>
+    <div class="btn-row" id="aiSaveRow" style="display:none;">
+      <button class="btn btn-good" id="aiSaveBtn">💾 حفظ الأسئلة الظاهرة</button>
+      <button class="btn btn-ghost" id="aiDiscardBtn">إلغاء</button>
+    </div>
+  </div>
+
+  <!-- ===== Manage questions ===== -->
+  <div class="panel" id="panel-manage">
+    <h2>📚 إدارة الأسئلة</h2>
+    <div class="filters">
+      <div><label class="f">الصف</label><select id="filterGrade"></select></div>
+      <div><label class="f">الدرس</label><select id="filterUnit"></select></div>
+      <div><label class="f">بحث</label><input id="filterSearch" placeholder="اكتب كلمة للبحث..." /></div>
+      <button class="btn btn-ghost" id="clearFilters">مسح الفلاتر</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>الصف</th><th>الدرس</th><th>الصعوبة</th><th>السؤال</th>
+            <th>الخيارات</th><th>الصحيحة</th><th>الشرح</th><th>إجراءات</th>
+          </tr>
+        </thead>
+        <tbody id="questionRows"></tbody>
+      </table>
+    </div>
+    <div class="empty" id="manageEmpty">لا توجد أسئلة مطابقة. ابدأ بإضافة سؤال أو استيراد ملف Excel.</div>
+  </div>
+
+  <!-- ===== Analytics ===== -->
+  <div class="panel" id="panel-analytics">
+    <h2>📊 تقرير تشخيص الأخطاء</h2>
+    <p style="color:var(--muted); margin-bottom:18px; font-size:14px;">
+      أكثر الأسئلة التي تعثر فيها الطلاب أثناء الحصص — راجعها قبل انتهاء الحصة.
+    </p>
+    <div id="analyticsList"></div>
+    <div class="empty" id="analyticsEmpty">لا توجد أخطاء مسجلة بعد. تظهر هنا بعد أول مسابقة.</div>
+  </div>
+</div>
+
+</body>
+</html>

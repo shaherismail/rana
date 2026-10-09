@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>لوحة تحكم المعلم — من سيربح المليون</title>
+<style>
+:root {
+  --primary: #2575fc;
+  --primary-dark: #6a11cb;
+  --gold: #f6a609;
+  --good: #4caf50;
+  --bad: #f44336;
+  --panel: #ffffff;
+  --ink: #22223b;
+  --muted: #6b7280;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Tahoma', 'Segoe UI', sans-serif;
+  background: #f3f4f6;
+  color: var(--ink);
+}
+button, select, input { font-family: inherit; }
+
+/* ---------- Login gate ---------- */
+#loginGate {
+  position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+}
+.login-card {
+  background: #fff; border-radius: 24px; padding: 40px 44px; width: 380px; text-align: center;
+  box-shadow: 0 25px 70px rgba(0,0,0,0.4);
+}
+.login-card h1 { font-size: 24px; margin-bottom: 6px; }
+.login-card p { color: var(--muted); margin-bottom: 20px; font-size: 14px; }
+.login-card input {
+  width: 100%; padding: 14px; border-radius: 14px; border: 3px solid #e5e7eb;
+  font-size: 18px; margin-bottom: 12px; text-align: center;
+}
+.login-card button {
+  width: 100%; padding: 14px; border: none; border-radius: 14px; font-size: 18px; font-weight: bold;
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary)); color: #fff; cursor: pointer;
+}
+.login-card .err { color: var(--bad); margin-top: 10px; font-weight: bold; }
+
+/* ---------- Layout ---------- */
+#admin { display: none; padding: 20px 28px 60px; max-width: 1200px; margin: 0 auto; }
+#admin.on { display: block; }
+header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+}
+header h1 { font-size: 26px; }
+header .meta { color: var(--muted); font-size: 14px; }
+.sync-chip {
+  padding: 6px 16px; border-radius: 999px; font-size: 13px; font-weight: bold;
+  background: #e8f5e9; color: var(--good); border: 1px solid #a5d6a7;
+}
+.sync-chip.offline { background: #fff3e0; color: #e65100; border-color: #ffcc80; }
+
+/* Tabs */
+.tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.tab {
+  padding: 10px 22px; border-radius: 999px; border: 2px solid #e5e7eb; background: #fff;
+  font-size: 15px; font-weight: bold; cursor: pointer; transition: all .15s;
+}
+.tab.active { border-color: var(--primary); background: #e3f0ff; color: var(--primary-dark); }
+.tab .badge {
+  display: inline-block; background: var(--primary); color: #fff; border-radius: 999px;
+  padding: 0 8px; font-size: 12px; margin-right: 6px;
+}
+.panel { display: none; background: var(--panel); border-radius: 20px; padding: 26px 30px; box-shadow: 0 6px 24px rgba(0,0,0,0.07); }
+.panel.on { display: block; }
+.panel h2 { margin-bottom: 16px; }
+
+/* Forms */
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+label.f { display: block; font-size: 13px; font-weight: bold; margin-bottom: 5px; color: #555; }
+input.f, select.f, textarea.f {
+  width: 100%; padding: 11px 14px; border-radius: 12px; border: 2px solid #e5e7eb;
+  font-size: 15px; margin-bottom: 14px; background: #fff;
+}
+input.f:focus, select.f:focus, textarea.f:focus { outline: none; border-color: var(--primary); }
+textarea.f { resize: vertical; min-height: 70px; }
+.btn {
+  padding: 12px 26px; border: none; border-radius: 14px; font-size: 16px; font-weight: bold;
+  cursor: pointer; transition: all .12s;
+}
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: var(--primary-dark); }
+.btn-gold { background: linear-gradient(135deg, #ffd700, var(--gold)); color: #4a3200; }
+.btn-good { background: var(--good); color: #fff; }
+.btn-danger { background: var(--bad); color: #fff; }
+.btn-ghost { background: #fff; border: 2px solid #e5e7eb; color: #555; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-row { display: flex; gap: 12px; margin-top: 6px; flex-wrap: wrap; }
+
+/* AI section */
+.ai-box {
+  background: linear-gradient(135deg, #ede7f6, #e3f2fd);
+  border-radius: 16px; padding: 20px; margin-bottom: 20px;
+}
+.ai-box h3 { font-size: 17px; margin-bottom: 10px; }
+.ai-status { font-size: 14px; color: #555; margin-top: 8px; }
+
+/* Review table */
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { padding: 9px 10px; text-align: right; border-bottom: 1px solid #e5e7eb; }
+th { background: #f9fafb; font-size: 13px; color: #555; }
+tr:hover td { background: #f3f4f6; }
+.edit-input { width: 100%; padding: 5px 8px; border-radius: 8px; border: 1px solid #d1d5db; font-size: 13px; }
+.q-diff { text-align: center; font-weight: bold; }
+.filters { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; align-items: flex-end; }
+.filters > div { flex: 1; min-width: 160px; }
+.filters input, .filters select { width: 100%; padding: 9px 12px; border-radius: 10px; border: 2px solid #e5e7eb; font-size: 14px; }
+.filters label.f { margin-bottom: 3px; }
+.empty { text-align: center; color: var(--muted); padding: 30px; font-size: 15px; }
+
+/* Analytics bars */
+.stat-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.stat-row .q { flex: 1; font-size: 14px; background: #f9fafb; padding: 8px 12px; border-radius: 10px; }
+.stat-row .bar-track { width: 200px; height: 20px; background: #eee; border-radius: 999px; overflow: hidden; }
+.stat-row .bar { height: 100%; background: linear-gradient(90deg, var(--gold), var(--bad)); border-radius: 999px; }
+.stat-row .n { width: 40px; text-align: center; font-weight: bold; color: var(--bad); }
+
+/* Import card */
+.import-note {
+  background: #fff8e1; border: 2px dashed #ffcc80; border-radius: 14px;
+  padding: 16px 20px; margin: 14px 0; font-size: 14px; line-height: 1.7;
+}
+.import-ok { background: #e8f5e9; color: var(--good); padding: 12px 18px; border-radius: 12px; margin-top: 12px; font-weight: bold; }
+.import-err { background: #ffebee; color: var(--bad); padding: 12px 18px; border-radius: 12px; margin-top: 12px; font-weight: bold; }
+details.help { margin-top: 14px; font-size: 14px; color: #555; }
+details.help summary { cursor: pointer; font-weight: bold; color: var(--primary); }
+</style>
+</head>
+<body>
+
+<!-- ===== Login gate ===== -->
+<div id="loginGate">
+  <div class="login-card">
+    <h1>🔐 لوحة تحكم المعلم</h1>
+    <p>أدخل كلمة سر لوحة التحكم للمتابعة</p>
+    <input type="password" id="adminPass" placeholder="كلمة السر" />
+    <button id="loginBtn">دخول</button>
+    <div class="err" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- ===== Admin panel ===== -->
+<div id="admin">
+  <header>
+    <div>
+      <h1>🎓 لوحة تحكم المعلم</h1>
+      <div class="meta">منصة من سيربح المليون — حصة اللغة الإنجليزية</div>
+    </div>
+    <span class="sync-chip" id="syncChip">متصل بالسحابة</span>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="add">➕ إضافة سؤال</button>
+    <button class="tab" data-tab="import">📥 استيراد Excel</button>
+    <button class="tab" data-tab="ai">🤖 توليد بالذكاء الاصطناعي</button>
+    <button class="tab" data-tab="manage">📚 إدارة الأسئلة <span class="badge" id="countBadge">0</span></button>
+    <button class="tab" data-tab="analytics">📊 تحليل الأخطاء <span class="badge" id="errorBadge">0</span></button>
+  </div>
+
+  <!-- ===== Add question ===== -->
+  <div class="panel on" id="panel-add">
+    <h2>إضافة سؤال جديد</h2>
+    <div class="grid2">
+      <div>
+        <label class="f">الصف الدراسي</label>
+        <input class="f" id="qGrade" placeholder="مثال: Grade 4" list="gradeList" />
+        <datalist id="gradeList"></datalist>
+      </div>
+      <div>
+        <label class="f">الدرس / الوحدة</label>
+        <input class="f" id="qUnit" placeholder="مثال: Unit 1: Animals" list="unitList" />
+        <datalist id="unitList"></datalist>
+      </div>
+    </div>
+    <label class="f">مستوى الصعوبة (من 1 إلى 15)</label>
+    <input class="f" id="qDifficulty" type="number" min="1" max="15" value="1" style="width:140px;" />
+    <label class="f">نص السؤال</label>
+    <textarea class="f" id="qQuestion" placeholder="مثال: Choose the correct word: The ___ is barking."></textarea>
+    <div class="grid4">
+      <div><label class="f">الخيار A</label><input class="f" id="qA" placeholder="A" /></div>
+      <div><label class="f">الخيار B</label><input class="f" id="qB" placeholder="B" /></div>
+      <div><label class="f">الخيار C</label><input class="f" id="qC" placeholder="C" /></div>
+      <div><label class="f">الخيار D</label><input class="f" id="qD" placeholder="D" /></div>
+    </div>
+    <label class="f">الإجابة الصحيحة</label>
+    <select class="f" id="qCorrect" style="width:140px;">
+      <option>A</option><option>B</option><option>C</option><option>D</option>
+    </select>
+    <label class="f">الشرح (يظهر بعد الإجابة)</label>
+    <textarea class="f" id="qExplanation" placeholder="اشرح القاعدة أو سبب صحة الإجابة بلغة بسيطة..."></textarea>
+    <div class="grid2">
+      <div>
+        <label class="f">رابط الصورة (اختياري)</label>
+        <input class="f" id="qImage" placeholder="https://..." />
+      </div>
+      <div>
+        <label class="f">النص الصوتي للنطق (اختياري)</label>
+        <input class="f" id="qAudio" placeholder="The dog is barking." />
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="saveQBtn">💾 حفظ السؤال</button>
+      <button class="btn btn-ghost" id="clearQBtn">مسح</button>
+    </div>
+    <div class="import-ok" id="addMsg" style="display:none;"></div>
+  </div>
+
+  <!-- ===== Excel import ===== -->
+  <div class="panel" id="panel-import">
+    <h2>📥 استيراد أسئلة من ملف Excel</h2>
+    <div class="import-note">
+      <b>طريقة الاستخدام:</b><br />
+      1. نزّل النموذج الجاهز بالأسفل وافتحه ببرنامج Excel.<br />
+      2. اكتب أسئلة الدرس في الصفوف (كل صف = سؤال).<br />
+      3. ارجع هنا واضغط «اختيار ملف» ثم «رفع وحفظ».
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" id="downloadTemplate">⬇️ تنزيل نموذج Excel</button>
+      <input type="file" id="excelFile" accept=".csv" style="display:none;" />
+      <button class="btn btn-primary" id="pickFileBtn">📁 اختيار ملف</button>
+      <button class="btn btn-good" id="uploadBtn" disabled>⬆️ رفع وحفظ</button>
+    </div>
+    <div id="importMsg"></div>
+    <details class="help">
+      <summary>صيغة الأعمدة المطلوبة</summary>
+      <p style="margin-top:8px; line-height:1.8;">
+        الأعمدة بالترتيب: <b>grade</b> (الصف) • <b>unit</b> (الدرس) • <b>difficulty</b> (الصعوبة 1-15) •
+        <b>question</b> (السؤال) • <b>option_a</b> • <b>option_b</b> • <b>option_c</b> • <b>option_d</b> •
+        <b>correct_option</b> (A/B/C/D) • <b>explanation</b> (الشرح) • <b>image_url</b> (اختياري) •
+        <b>audio_text</b> (اختياري)
+      </p>
+    </details>
+  </div>
+
+  <!-- ===== AI generator ===== -->
+  <div class="panel" id="panel-ai">
+    <h2>🤖 توليد الأسئلة بالذكاء الاصطناعي</h2>
+    <div class="ai-box">
+      <h3>اكتب تفاصيل الدرس وسيقوم الذكاء الاصطناعي بإنشاء أسئلة متدرجة الصعوبة للمراجعة</h3>
+      <div class="grid2">
+        <div>
+          <label class="f">الصف الدراسي</label>
+          <input class="f" id="aiGrade" placeholder="Grade 4" list="gradeList" />
+        </div>
+        <div>
+          <label class="f">الدرس / الوحدة (اتركه فارغًا إذا كنت سترفع ملفًا)</label>
+          <input class="f" id="aiUnit" placeholder="Unit 1: Animals" list="unitList" />
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-gold" id="aiGenerateBtn">✨ توليد الأسئلة</button>
+      </div>
+      <div class="ai-status" id="aiStatus"></div>
+    </div>
+
+    <div class="ai-box" style="margin-top:16px;">
+      <h3>📄 أو ارفع ملف الدرس (PDF / Word / Text) — يقرأ محتواه ويبني الأسئلة منه</h3>
+      <div class="grid2">
+        <div>
+          <label class="f">الصف الدراسي</label>
+          <input class="f" id="fileGrade" placeholder="Grade 4" list="gradeList" />
+        </div>
+        <div>
+          <label class="f">الدرس / الوحدة (يُملأ تلقائيًا من المحتوى إن تُرك فارغًا)</label>
+          <input class="f" id="fileUnit" placeholder="يُكتشف من الملف" list="unitList" />
+        </div>
+      </div>
+      <div class="btn-row">
+        <label class="btn btn-gold" style="cursor:pointer;">📎 اختيار ملف
+          <input type="file" id="docFile" accept=".pdf,.doc,.docx,.txt,.md,.rtf,.csv" style="display:none;" />
+        </label>
+        <button class="btn btn-gold" id="docGenerateBtn" disabled>🤖 ولّد أسئلة من الملف</button>
+      </div>
+      <div class="ai-status" id="docStatus"></div>
+      <div id="docInfo" style="font-size:13px; color:var(--muted); margin-top:8px;"></div>
+    </div>
+
+    <div id="aiReview"></div>
+    <div class="btn-row" id="aiSaveRow" style="display:none;">
+      <button class="btn btn-good" id="aiSaveBtn">💾 حفظ الأسئلة الظاهرة</button>
+      <button class="btn btn-ghost" id="aiDiscardBtn">إلغاء</button>
+    </div>
+  </div>
+
+  <!-- ===== Manage questions ===== -->
+  <div class="panel" id="panel-manage">
+    <h2>📚 إدارة الأسئلة</h2>
+    <div class="filters">
+      <div><label class="f">الصف</label><select id="filterGrade"></select></div>
+      <div><label class="f">الدرس</label><select id="filterUnit"></select></div>
+      <div><label class="f">بحث</label><input id="filterSearch" placeholder="اكتب كلمة للبحث..." /></div>
+      <button class="btn btn-ghost" id="clearFilters">مسح الفلاتر</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>الصف</th><th>الدرس</th><th>الصعوبة</th><th>السؤال</th>
+            <th>الخيارات</th><th>الصحيحة</th><th>الشرح</th><th>إجراءات</th>
+          </tr>
+        </thead>
+        <tbody id="questionRows"></tbody>
+      </table>
+    </div>
+    <div class="empty" id="manageEmpty">لا توجد أسئلة مطابقة. ابدأ بإضافة سؤال أو استيراد ملف Excel.</div>
+  </div>
+
+  <!-- ===== Analytics ===== -->
+  <div class="panel" id="panel-analytics">
+    <h2>📊 تقرير تشخيص الأخطاء</h2>
+    <p style="color:var(--muted); margin-bottom:18px; font-size:14px;">
+      أكثر الأسئلة التي تعثر فيها الطلاب أثناء الحصص — راجعها قبل انتهاء الحصة.
+    </p>
+    <div id="analyticsList"></div>
+    <div class="empty" id="analyticsEmpty">لا توجد أخطاء مسجلة بعد. تظهر هنا بعد أول مسابقة.</div>
+  </div>
+</div>
+
+<script type="module">
+import { syncFromCloud, flushPending } from './lib/offline.js';
+import {
+  addQuestion, addQuestions, updateQuestion, deleteQuestion,
+  listGrades, listUnits, getErrorStats,
+} from './lib/questions.js';
+import { loadLocal } from './lib/offline.js';
+import { isSupabaseConfigured } from './lib/supabase.js';
+
+const $ = (id) => document.getElementById(id);
+const ADMIN_LS_KEY = 'mc_admin_pass_v1';
+let selectedFile = null;
+let aiDraft = [];
+
+/* ---------------- Login gate ---------------- */
+// The real check happens against the server (ADMIN_PASSWORD env var) on every
+// /api/generate-questions and /api/questions call. This gate keeps the panel
+// private on shared devices (the smartboard).
+function tryLogin() {
+  const pass = $('adminPass').value;
+  if (!pass) { $('loginErr').textContent = 'أدخل كلمة السر'; return; }
+  sessionStorage.setItem(ADMIN_LS_KEY, pass);
+  localStorage.setItem('mc_admin_password', pass); // read by lib/offline.js
+  enterPanel();
+}
+function enterPanel() {
+  $('loginGate').style.display = 'none';
+  $('admin').classList.add('on');
+  refreshAll();
+}
+$('loginBtn').addEventListener('click', tryLogin);
+$('adminPass').addEventListener('keydown', (e) => { if (e.key === 'Enter') tryLogin(); });
+
+/* ---------------- Tabs ---------------- */
+document.querySelectorAll('.tab').forEach((tab) => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach((t) => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach((p) => p.classList.remove('on'));
+    tab.classList.add('active');
+    $('panel-' + tab.dataset.tab).classList.add('on');
+  });
+});
+
+/* ---------------- Datalists & filters ---------------- */
+function refreshDatalists() {
+  const grades = listGrades();
+  $('gradeList').innerHTML = grades.map((g) => `<option value="${g}"></option>`).join('');
+  const allUnits = [...new Set(loadLocal().map((q) => q.unit))];
+  $('unitList').innerHTML = allUnits.map((u) => `<option value="${u}"></option>`).join('');
+
+  const fg = $('filterGrade'), fu = $('filterUnit');
+  const keepG = fg.value, keepU = fu.value;
+  fg.innerHTML = '<option value="">الكل</option>' + grades.map((g) => `<option value="${g}">${g}</option>`).join('');
+  const unitsForG = keepG ? listUnits(keepG) : allUnits;
+  fu.innerHTML = '<option value="">الكل</option>' + unitsForG.map((u) => `<option value="${u}">${u}</option>`).join('');
+  fg.value = grades.includes(keepG) ? keepG : '';
+  fu.value = unitsForG.includes(keepU) ? keepU : '';
+}
+
+/* ---------------- Add question form ---------------- */
+function clearForm() {
+  ['qGrade', 'qUnit', 'qQuestion', 'qA', 'qB', 'qC', 'qD', 'qExplanation', 'qImage', 'qAudio'].forEach((id) => { $(id).value = ''; });
+  $('qDifficulty').value = '1';
+  $('qCorrect').value = 'A';
+}
+
+$('saveQBtn').addEventListener('click', () => {
+  const grade = $('qGrade').value.trim();
+  const unit = $('qUnit').value.trim();
+  const question = $('qQuestion').value.trim();
+  const option_a = $('qA').value.trim();
+  const option_b = $('qB').value.trim();
+  const option_c = $('qC').value.trim();
+  const option_d = $('qD').value.trim();
+  if (!grade || !unit || !question || !option_a || !option_b || !option_c || !option_d) {
+    flash($('addMsg'), 'املأ جميع الحقول الإلزامية.', true);
+    return;
+  }
+  addQuestion({
+    grade, unit,
+    difficulty: $('qDifficulty').value,
+    question, option_a, option_b, option_c, option_d,
+    correct_option: $('qCorrect').value,
+    explanation: $('qExplanation').value.trim(),
+    image_url: $('qImage').value.trim(),
+    audio_text: $('qAudio').value.trim(),
+  });
+  flash($('addMsg'), '✅ تم حفظ السؤال.');
+  clearForm();
+  refreshAll();
+});
+$('clearQBtn').addEventListener('click', clearForm);
+
+function flash(el, msg, isError = false) {
+  el.textContent = msg;
+  el.className = isError ? 'import-err' : 'import-ok';
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 4000);
+}
+
+/* ---------------- Excel/CSV import ---------------- */
+const TEMPLATE_HEADERS = [
+  'grade', 'unit', 'difficulty', 'question', 'option_a', 'option_b', 'option_c', 'option_d',
+  'correct_option', 'explanation', 'image_url', 'audio_text',
+];
+
+$('downloadTemplate').addEventListener('click', () => {
+  const csv = TEMPLATE_HEADERS.join(',') + '\n' +
+    'Grade 4,Unit 1: Animals,1,"Choose the correct word: The ___ is barking.",cat,dog,bird,fish,B,"Dogs bark. The dog is barking is correct.",,\n' +
+    'Grade 4,Unit 1: Animals,2,"What color is the sky?",blue,green,red,yellow,A,"The sky is blue.",,\n';
+  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'questions_template.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+$('pickFileBtn').addEventListener('click', () => $('excelFile').click());
+
+$('excelFile').addEventListener('change', (e) => {
+  selectedFile = e.target.files[0];
+  $('uploadBtn').disabled = !selectedFile;
+  if (selectedFile) flash($('importMsg'), `تم اختيار: ${selectedFile.name}`);
+});
+
+$('uploadBtn').addEventListener('click', async () => {
+  if (!selectedFile) return;
+  try {
+    const text = await selectedFile.text();
+    const rows = parseCsv(text);
+    const questions = rows.map((r) => ({
+      grade: r.grade, unit: r.unit,
+      difficulty: Number(r.difficulty) || 1,
+      question: r.question, option_a: r.option_a, option_b: r.option_b,
+      option_c: r.option_c, option_d: r.option_d,
+      correct_option: r.correct_option,
+      explanation: r.explanation || '',
+      image_url: r.image_url || '',
+      audio_text: r.audio_text || '',
+    }));
+    const saved = addQuestions(questions.filter((q) =>
+      q.grade && q.unit && q.question && q.option_a && q.option_b && q.option_c && q.option_d));
+    flash($('importMsg'), `✅ تم استيراد ${saved.length} سؤالًا.`);
+    selectedFile = null;
+    $('uploadBtn').disabled = true;
+    $('excelFile').value = '';
+    refreshAll();
+  } catch (err) {
+    flash($('importMsg'), 'فشل قراءة الملف: ' + err.message, true);
+  }
+});
+
+/** Tiny CSV parser: supports quoted fields containing commas. */
+function parseCsv(text) {
+  const rows = [];
+  let row = [], current = '', inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (inQuotes) {
+      if (ch === '"') {
+        if (text[i + 1] === '"') { current += '"'; i++; }
+        else inQuotes = false;
+      } else current += ch;
+    } else if (ch === '"') inQuotes = true;
+    else if (ch === ',') { row.push(current.trim()); current = ''; }
+    else if (ch === '\n' || ch === '\r') {
+      if (current !== '' || row.length) { row.push(current.trim()); rows.push(row); row = []; current = ''; }
+      if (ch === '\r' && text[i + 1] === '\n') i++;
+    } else current += ch;
+  }
+  if (current !== '' || row.length) { row.push(current.trim()); rows.push(row); }
+  const headers = rows.shift().map((h) => h.replace(/^﻿/, '').trim());
+  return rows.map((r) => {
+    const obj = {};
+    headers.forEach((h, i) => { obj[h] = (r[i] || '').trim(); });
+    return obj;
+  });
+}
+
+/* ---------------- AI generator ---------------- */
+$('aiGenerateBtn').addEventListener('click', async () => {
+  const grade = $('aiGrade').value.trim();
+  const unit = $('aiUnit').value.trim();
+  const status = $('aiStatus');
+  if (!grade) { status.textContent = 'املأ الصف الدراسي أولًا.'; return; }
+  if (!unit) { status.textContent = 'اكتب اسم الدرس، أو استخدم رفع الملف بالأسفل.'; return; }
+
+  status.textContent = '⏳ جاري التوليد... قد يستغرق ذلك بضع ثوانٍ.';
+  $('aiGenerateBtn').disabled = true;
+  $('aiSaveRow').style.display = 'none';
+
+  try {
+    const res = await fetch('/api/generate-questions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-admin-password': sessionStorage.getItem(ADMIN_LS_KEY) || '',
+      },
+      body: JSON.stringify({ grade, unit }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `فشل الطلب (${res.status})`);
+    }
+    const data = await res.json();
+    aiDraft = data.questions;
+    renderAiDraft();
+    status.textContent = `تم توليد ${aiDraft.length} سؤالًا. راجعها وعدلها قبل الحفظ.`;
+  } catch (err) {
+    status.textContent = '❌ ' + err.message;
+  } finally {
+    $('aiGenerateBtn').disabled = false;
+  }
+});
+
+function renderAiDraft() {
+  $('aiReview').innerHTML = `<table>
+    <thead><tr><th>#</th><th>السؤال</th><th>A</th><th>B</th><th>C</th><th>D</th><th>الصحيحة</th><th>الشرح</th></tr></thead>
+    <tbody>${aiDraft.map((q, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td><input class="edit-input" data-f="question" data-i="${i}" value="${esc(q.question)}" /></td>
+        <td><input class="edit-input" data-f="option_a" data-i="${i}" value="${esc(q.option_a)}" /></td>
+        <td><input class="edit-input" data-f="option_b" data-i="${i}" value="${esc(q.option_b)}" /></td>
+        <td><input class="edit-input" data-f="option_c" data-i="${i}" value="${esc(q.option_c)}" /></td>
+        <td><input class="edit-input" data-f="option_d" data-i="${i}" value="${esc(q.option_d)}" /></td>
+        <td><input class="edit-input" data-f="correct_option" data-i="${i}" value="${esc(q.correct_option)}" style="width:60px;" /></td>
+        <td><input class="edit-input" data-f="explanation" data-i="${i}" value="${esc(q.explanation)}" /></td>
+      </tr>`).join('')}</tbody></table>`;
+  $('aiSaveRow').style.display = 'flex';
+}
+
+$('aiReview').addEventListener('change', (e) => {
+  const t = e.target;
+  if (t.dataset && t.dataset.f && t.dataset.i !== undefined) {
+    aiDraft[Number(t.dataset.i)][t.dataset.f] = t.value;
+  }
+});
+
+$('aiSaveBtn').addEventListener('click', () => {
+  // The draft may come from the topic box or the document-upload box;
+  // prefer whichever fields were filled.
+  const grade = $('fileGrade').value.trim() || $('aiGrade').value.trim();
+  const unit = $('fileUnit').value.trim() || $('aiUnit').value.trim();
+  if (!grade) { flash($('aiStatus'), '⚠️ لا يمكن الحفظ بدون صف دراسي.'); return; }
+  if (!unit) { flash($('aiStatus'), '⚠️ لا يمكن الحفظ بدون اسم درس.'); return; }
+  const valid = aiDraft.filter((q) => q.question && q.option_a && q.option_b && q.option_c && q.option_d);
+  const saved = addQuestions(valid.map((q) => ({
+    ...q, grade, unit,
+    correct_option: ['A', 'B', 'C', 'D'].includes(q.correct_option) ? q.correct_option : 'A',
+  })));
+  flash($('aiStatus'), `✅ تم حفظ ${saved.length} سؤالًا في بنك الأسئلة.`);
+  aiDraft = [];
+  $('aiReview').innerHTML = '';
+  $('aiSaveRow').style.display = 'none';
+  refreshAll();
+});
+
+$('aiDiscardBtn').addEventListener('click', () => {
+  aiDraft = [];
+  $('aiReview').innerHTML = '';
+  $('aiSaveRow').style.display = 'none';
+  $('aiStatus').textContent = 'تم إلغاء المسودة.';
+});
+
+/* -------------- Document upload → AI question generation -------------- */
+
+let docExtracted = null;
+
+$('docFile').addEventListener('change', async (e) => {
+  const file = e.target.files?.[0];
+  const status = $('docStatus');
+  const info = $('docInfo');
+  docExtracted = null;
+  $('docGenerateBtn').disabled = true;
+  if (!file) { info.textContent = ''; return; }
+
+  info.textContent = `📄 ${esc(file.name)} — جاري قراءة المحتوى...`;
+  status.textContent = '';
+  try {
+    const res = await fetch('/api/extract-document', {
+      method: 'POST',
+      headers: {
+        'x-admin-password': sessionStorage.getItem(ADMIN_LS_KEY) || '',
+      },
+      body: (() => {
+        const fd = new FormData();
+        fd.append('file', file);
+        return fd;
+      })(),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      throw new Error(data.error || `فشلت قراءة الملف (${res.status})`);
+    }
+    const clean = (data.text || '').replace(/\s{3,}/g, ' ').trim();
+    if (clean.length < 20) {
+      throw new Error('لم أجد نصًا قابلًا للقراءة في الملف.');
+    }
+    docExtracted = clean;
+    const words = docExtracted.split(/\s+/).length;
+    info.innerHTML = `✅ <b>${esc(file.name)}</b> — استخرجت ${words} كلمة.
+      <br/>اضغط «ولّد أسئلة من الملف» لإنشاء الأسئلة من المحتوى.`;
+    $('docGenerateBtn').disabled = false;
+  } catch (err) {
+    info.innerHTML = `❌ فشلت قراءة <b>${esc(file.name)}</b>: ${esc(err.message)}`;
+  }
+});
+
+$('docGenerateBtn').addEventListener('click', async () => {
+  if (!docExtracted) return;
+  const grade = $('fileGrade').value.trim() || $('aiGrade').value.trim();
+  const unitHint = $('fileUnit').value.trim();
+  const status = $('docStatus');
+  if (!grade) { status.textContent = 'حدد الصف الدراسي أولًا.'; return; }
+
+  status.textContent = '⏳ الذكاء الاصطناعي يقرأ المحتوى ويولّد الأسئلة... قد يستغرق ذلك دقيقة.';
+  $('docGenerateBtn').disabled = true;
+  $('aiSaveRow').style.display = 'none';
+
+  try {
+    const res = await fetch('/api/generate-questions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-admin-password': sessionStorage.getItem(ADMIN_LS_KEY) || '',
+      },
+      body: JSON.stringify({ grade, content: docExtracted, unit: unitHint || undefined }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `فشل الطلب (${res.status})`);
+    }
+    const data = await res.json();
+    aiDraft = data.questions;
+    const unitName = data.unit || unitHint || 'ملف مرفوع';
+    // Show the AI-chosen unit name so the teacher can adjust before saving.
+    if (!$('fileUnit').value.trim()) $('fileUnit').value = unitName;
+    renderAiDraft();
+    status.textContent = `✅ تم توليد ${aiDraft.length} سؤالًا من المحتوى (الدرس: ${unitName}). راجعها وعدلها قبل الحفظ.`;
+  } catch (err) {
+    status.textContent = '❌ ' + err.message;
+  } finally {
+    $('docGenerateBtn').disabled = false;
+  }
+});
+
+/* ---------------- Manage questions ---------------- */
+function renderManage() {
+  const fg = $('filterGrade').value;
+  const fu = $('filterUnit').value;
+  const search = $('filterSearch').value.trim().toLowerCase();
+  const rows = loadLocal().filter((q) => {
+    if (fg && q.grade !== fg) return false;
+    if (fu && q.unit !== fu) return false;
+    if (search && !(q.question + q.option_a + q.option_b + q.option_c + q.option_d + q.explanation).toLowerCase().includes(search)) return false;
+    return true;
+  });
+  $('countBadge').textContent = loadLocal().length;
+  $('manageEmpty').style.display = rows.length ? 'none' : 'block';
+  $('questionRows').innerHTML = rows.map((q) => `
+    <tr data-id="${q.id}">
+      <td><input class="edit-input" data-f="grade" value="${esc(q.grade)}" /></td>
+      <td><input class="edit-input" data-f="unit" value="${esc(q.unit)}" /></td>
+      <td class="q-diff"><input class="edit-input" data-f="difficulty" type="number" min="1" max="15" value="${q.difficulty}" /></td>
+      <td><input class="edit-input" data-f="question" value="${esc(q.question)}" /></td>
+      <td style="font-size:12px;">A: ${esc(q.option_a)}<br>B: ${esc(q.option_b)}<br>C: ${esc(q.option_c)}<br>D: ${esc(q.option_d)}</td>
+      <td><input class="edit-input" data-f="correct_option" value="${esc(q.correct_option)}" style="width:50px;" /></td>
+      <td><input class="edit-input" data-f="explanation" value="${esc(q.explanation)}" /></td>
+      <td style="white-space:nowrap;">
+        <button class="btn btn-primary" style="padding:5px 12px; font-size:13px;" data-act="save">حفظ</button>
+        <button class="btn btn-danger" style="padding:5px 12px; font-size:13px;" data-act="delete">حذف</button>
+      </td>
+    </tr>`).join('');
+}
+
+$('questionRows').addEventListener('change', (e) => {
+  const tr = e.target.closest('tr');
+  if (!tr) return;
+  const patch = {};
+  patch[e.target.dataset.f] = e.target.value;
+  updateQuestion(tr.dataset.id, patch);
+  refreshDatalists();
+});
+
+$('questionRows').addEventListener('click', (e) => {
+  const btn = e.target.closest('button[data-act]');
+  if (!btn) return;
+  const tr = btn.closest('tr');
+  const id = tr.dataset.id;
+  if (btn.dataset.act === 'delete') {
+    deleteQuestion(id);
+    refreshAll();
+  } else if (btn.dataset.act === 'save') {
+    const patch = {};
+    tr.querySelectorAll('input[data-f]').forEach((inp) => { patch[inp.dataset.f] = inp.value; });
+    updateQuestion(id, patch);
+    flash($('addMsg'), '✅ تم تحديث السؤال.');
+    refreshAll();
+  }
+});
+
+$('filterGrade').addEventListener('change', () => {
+  const allUnits = [...new Set(loadLocal().map((q) => q.unit))];
+  const units = $('filterGrade').value ? listUnits($('filterGrade').value) : allUnits;
+  const keep = $('filterUnit').value;
+  $('filterUnit').innerHTML = '<option value="">الكل</option>' + units.map((u) => `<option value="${u}">${u}</option>`).join('');
+  $('filterUnit').value = units.includes(keep) ? keep : '';
+  renderManage();
+});
+$('filterUnit').addEventListener('change', renderManage);
+$('filterSearch').addEventListener('input', renderManage);
+$('clearFilters').addEventListener('click', () => {
+  $('filterGrade').value = '';
+  $('filterUnit').value = '';
+  $('filterSearch').value = '';
+  renderManage();
+});
+
+/* ---------------- Analytics ---------------- */
+function renderAnalytics() {
+  const stats = getErrorStats();
+  const all = loadLocal();
+  $('errorBadge').textContent = stats.length;
+  $('analyticsEmpty').style.display = stats.length ? 'none' : 'block';
+  const max = Math.max(...stats.map((s) => s.count), 1);
+  $('analyticsList').innerHTML = stats.map((s) => {
+    const q = all.find((x) => x.id === s.question_id);
+    const text = q ? q.question : '(سؤال محذوف)';
+    return `<div class="stat-row">
+      <div class="q">${esc(text)}</div>
+      <div class="bar-track"><div class="bar" style="width:${(s.count / max * 100).toFixed(0)}%"></div></div>
+      <div class="n">${s.count}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ---------------- Sync chip ---------------- */
+function renderSyncChip() {
+  const chip = $('syncChip');
+  if (!navigator.onLine) {
+    chip.textContent = 'أوفلاين — التغييرات ستتزامن لاحقًا';
+    chip.classList.add('offline');
+  } else if (!isSupabaseConfigured()) {
+    chip.textContent = 'السحابة غير مُعدة — يعمل محليًا';
+    chip.classList.add('offline');
+  } else {
+    chip.textContent = 'متصل بالسحابة';
+    chip.classList.remove('offline');
+  }
+}
+window.addEventListener('online', () => { renderSyncChip(); flushPending(); refreshAll(); });
+window.addEventListener('offline', renderSyncChip);
+
+/* ---------------- Helpers ---------------- */
+function esc(s) {
+  return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function refreshAll() {
+  refreshDatalists();
+  renderManage();
+  renderAnalytics();
+  renderSyncChip();
+}
+
+/* ---------------- Boot ---------------- */
+(async function boot() {
+  if (sessionStorage.getItem(ADMIN_LS_KEY)) enterPanel();
+  await syncFromCloud();
+  if ($('admin').classList.contains('on')) refreshAll();
+})();
+</script>
+</body>
+</html>
