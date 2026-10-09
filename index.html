@@ -27,6 +27,8 @@ body {
   user-select: none;
 }
 #app { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+/* Mobile overrides this to allow scrolling (see media queries). */
+#app.scrollable { position: static; min-height: 100vh; align-items: flex-start; }
 @keyframes pop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 @keyframes pulse {
   0%, 100% { box-shadow: 0 15px 40px rgba(0,0,0,0.4); }
@@ -145,6 +147,123 @@ body.flash-bad { animation: flashRed 0.7s ease; }
   40% { transform: scale(1.2) rotate(4deg); opacity: 1; }
   70% { transform: scale(1) rotate(0deg); opacity: 1; }
   100% { transform: scale(1.6) rotate(0deg); opacity: 0; }
+}
+
+/* ---------- Mobile responsiveness ---------- */
+/*
+ * The layout is built desktop-first (the smartboard is the primary target).
+ * These blocks scale it down for phones, tablets and projectors of any size.
+ * Everything is fluid: clamp() for type, flexible gaps, and a grid that
+ * collapses from 2 columns to 1 when the screen gets narrow.
+ */
+
+/* Large screens stay as designed; just cap content width. */
+@media (max-width: 1100px) {
+  .main-area { gap: 24px; padding: 16px 24px; }
+  .question-card { font-size: clamp(20px, 3vw, 28px); }
+  .option-btn { font-size: clamp(17px, 2.2vw, 22px); }
+}
+
+/* Tablets & small laptops. */
+@media (max-width: 900px) {
+  .main-area { flex-direction: column; justify-content: flex-start; overflow-y: auto; }
+  .ladder {
+    flex-direction: row; flex-wrap: wrap; min-width: 0; width: 100%;
+    gap: 6px; padding: 10px;
+  }
+  .ladder .step { flex: 1 1 88px; padding: 4px 8px; font-size: 13px; }
+  .ladder .step .num { display: none; }
+  .question-area { max-width: 100%; }
+  .question-card { font-size: clamp(18px, 4vw, 24px); padding: 18px 20px; }
+  .options { gap: 10px; }
+  .option-btn { padding: 14px 12px; font-size: clamp(16px, 3.4vw, 20px); gap: 10px; }
+  .option-btn .letter { min-width: 38px; height: 38px; font-size: 18px; }
+  .lifelines { gap: 10px; }
+  .life-btn { padding: 10px 14px; font-size: 16px; }
+}
+
+/* Phones (portrait & small landscape). */
+@media (max-width: 640px) {
+  body { overflow: auto; }
+  #app.scrollable { position: static; min-height: 100vh; align-items: flex-start; }
+  #game { height: auto; min-height: 100vh; }
+  .setup-card { padding: 24px 20px; border-radius: 20px; margin: 12px auto; }
+  .setup-card h1 { font-size: clamp(24px, 7vw, 34px); }
+  .setup-card p.sub { font-size: 15px; margin-bottom: 16px; }
+  .mode-row { flex-direction: column; gap: 10px; }
+  .mode-btn { padding: 14px; }
+  .start-btn { font-size: 20px; padding: 15px; }
+  .topbar { flex-wrap: wrap; gap: 8px; padding: 8px 12px; font-size: 15px; }
+  .score-chip { font-size: 16px !important; padding: 4px 12px !important; }
+  .team-chip { font-size: 14px !important; padding: 4px 10px !important; }
+  .main-area { padding: 12px; gap: 14px; }
+  .question-card { font-size: clamp(17px, 5.2vw, 22px); padding: 16px; border-radius: 16px; }
+  /* Stack the 4 answer options in a single column so long English answers fit. */
+  .options { grid-template-columns: 1fr; }
+  .option-btn { font-size: clamp(16px, 4.6vw, 20px); padding: 13px 12px; }
+  .lifelines { width: 100%; }
+  .life-btn { flex: 1; padding: 12px 8px; font-size: 15px; text-align: center; }
+  .timer-ring { width: 60px; height: 60px; font-size: 19px; }
+  .speaker-btn { width: 48px; height: 48px; font-size: 22px; }
+  .q-image { max-height: 160px; }
+  #mascot { font-size: 52px; left: 10px; bottom: 8px; }
+  #streak { font-size: 16px; padding: 6px 16px; top: 8px; }
+  #sticker { font-size: 64px; }
+  #levelup .word { font-size: clamp(38px, 13vw, 72px); }
+  .end-card { padding: 28px 22px; margin: 12px; border-radius: 22px; }
+  .end-card h1 { font-size: clamp(24px, 7vw, 34px); }
+  .end-card .big { font-size: clamp(38px, 12vw, 56px); }
+  .again-btn { font-size: 19px; padding: 14px 30px; }
+  .overlay .card { padding: 22px 18px; border-radius: 18px; }
+  .explain-card .verdict { font-size: 22px; }
+  .explain-card h2 { font-size: 20px; }
+  .explain-card p { font-size: 17px; }
+  .explain-card button { font-size: 18px; padding: 12px 28px; }
+  .poll-card h2 { font-size: 20px; margin-bottom: 14px; }
+  .poll-row { gap: 8px; margin-bottom: 10px; }
+  .poll-row input { width: 54px; font-size: 16px; }
+  .help-hint { display: none; }
+  .deco { font-size: 28px !important; }
+}
+
+/* Landscape phones: keep height usable, tighten vertical rhythm. */
+@media (max-height: 520px) and (orientation: landscape) {
+  .setup-card { padding: 14px 18px; margin: 4px auto; }
+  .setup-card h1 { font-size: 22px; margin-bottom: 2px; }
+  .setup-card p.sub { display: none; }
+  .setup-card label { margin: 6px 0 2px; font-size: 13px; }
+  .setup-card select { padding: 9px 12px; font-size: 15px; }
+  .mode-btn { padding: 10px; font-size: 15px; }
+  .start-btn { margin-top: 12px; padding: 12px; font-size: 18px; }
+  .main-area { gap: 8px; padding: 8px 12px; }
+  .question-card { padding: 10px 14px; font-size: 16px; }
+  .options { gap: 6px; }
+  .option-btn { padding: 8px 10px; font-size: 15px; }
+  .option-btn .letter { min-width: 32px; height: 32px; font-size: 16px; }
+  .lifelines { gap: 8px; }
+  .life-btn { padding: 8px 10px; font-size: 14px; }
+  #mascot { font-size: 40px; }
+  #sticker { font-size: 48px; top: 18%; }
+  #levelup .word { font-size: clamp(30px, 9vw, 56px); }
+}
+
+/* Very small / old phones. */
+@media (max-width: 360px) {
+  .setup-card h1 { font-size: 22px; }
+  .question-card { font-size: 16px; }
+  .option-btn { font-size: 15px; padding: 10px 8px; }
+  .ladder .step { flex: 1 1 72px; font-size: 12px; }
+}
+
+/* Reduce motion for kids sensitive to it — the game stays fully playable. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  body.party { animation: none; }
+  .deco, .spark { display: none !important; }
 }
 
 /* ---------- Setup screen ---------- */
@@ -967,6 +1086,16 @@ window.addEventListener('online', updateNetBadge);
 window.addEventListener('offline', updateNetBadge);
 
 /* ---------------- Boot ---------------- */
+/* Desktop keeps the board fixed and centered; phones scroll instead. */
+function applyViewportMode() {
+  // window.matchMedia is absent in some headless/DOM harnesses.
+  const mq = typeof window.matchMedia === 'function' ? window.matchMedia('(max-width: 640px)') : null;
+  const mobile = mq ? mq.matches : false;
+  document.getElementById('app').classList.toggle('scrollable', mobile);
+}
+window.addEventListener('resize', applyViewportMode);
+applyViewportMode();
+
 (async function boot() {
   await syncFromCloud();
   populateGrades();
