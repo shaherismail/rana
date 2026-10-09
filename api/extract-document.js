@@ -22,6 +22,43 @@ installDomShims();
 
 const MAX_BYTES = 15 * 1024 * 1024; // 15 MB upload cap
 
+/**
+ * pdf.js refuses to parse anything on Node until it has a worker. On Node it
+ * disables the real Web Worker and falls back to `#setupFakeWorker`, which does
+ * a dynamic `import(GlobalWorkerOptions.workerSrc)` for pdf.worker.mjs.
+ *
+ * On Vercel the serverless bundle relocates the file, so that relative import
+ * resolves to a path that does not exist and the whole function dies with
+ * "Setting up fake worker failed: Cannot find module '.../pdf.worker.mjs'".
+ *
+ * pdf.js checks `globalThis.pdfjsWorker.WorkerMessageHandler` *before* that
+ * import, so loading the worker ourselves and setting that global short-
+ * circuits the failing code path entirely.
+ */
+async function loadPdfWorker() {
+  if (globalThis.pdfjsWorker?.WorkerMessageHandler) return;
+  let mod = null;
+  let lastErr = null;
+  for (const p of [
+    'pdfjs-dist/legacy/build/pdf.worker.mjs',
+    'pdfjs-dist/build/pdf.worker.mjs',
+  ]) {
+    try {
+      mod = await import(p);
+      break;
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  if (!mod) {
+    const err = new Error('تعذّر تحميل عامل قراءة PDF (pdf.worker)');
+    err.__cause = lastErr?.message || 'import failed';
+    err.__stage = 'import(pdf.worker)';
+    throw err;
+  }
+  globalThis.pdfjsWorker = mod;
+}
+
 /* pdf-parse is loaded lazily: if the serverless bundler fails to include it,
  * the API still loads and returns a readable error instead of a module crash. */
 let _PDFParse = null;
@@ -138,6 +175,9 @@ function parseSection(buf) {
 async function extractPdf(buf) {
   // pdf.js requires Uint8Array, not a Node Buffer.
   const data = new Uint8Array(buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength));
+  // Must run before getDocument(): sets globalThis.pdfjsWorker so pdf.js uses it
+  // instead of its own dynamic import of a bundled-away worker path.
+  await loadPdfWorker();
   const PDFParse = await getPdfParser();
   const parser = new PDFParse(data);
   const out = await parser.getText();
